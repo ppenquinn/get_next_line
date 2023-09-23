@@ -6,23 +6,46 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:30:21 by nappalav          #+#    #+#             */
-/*   Updated: 2023/09/23 21:33:58 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/09/24 01:35:42 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+char	*seperate(char *str)
+{
+	size_t	i;
+	char	*temp;
+	char	*line;
+
+	temp = str;
+	i = 0;
+	while (*(str++) != '\n')
+		i++;
+	str = ft_strdup(str);
+	//handle
+	line = malloc(sizeof(char) * (i + 2));
+	while (i > 0)
+	{
+		line[i] = temp[i];
+		i--;
+	}
+	line[i] = temp[i];
+	free(temp);
+	return (line);
+}
 char	*get_next_line(int fd)
 {
-	char			buf[BUFFER_SIZE + 1];
+	char			*buf;
 	size_t			nbyte;
 	static t_list	*lst;
 	char			*temp;
-	size_t	i = 1;
-
+	char			*line;
 
 	nbyte = BUFFER_SIZE;
-	buf[BUFFER_SIZE] = 0;
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf)
+		return (NULL);
 	while (lst != NULL && lst->fd != fd)
 		lst = lst->next;
 	if (!lst)
@@ -30,23 +53,17 @@ char	*get_next_line(int fd)
 	//finish first
 	while (!ft_strchr(lst->str, '\n'))
 	{
-		printf("\nI'm in at round %zu!!\n", i);
-		printf("first str is %s\n", lst->str);
 		read(fd, buf, nbyte);
 		temp = lst->str;
-		printf("temp is ||%s||\nbuf is ||%s|| \n", temp, buf);
 		lst->str = ft_strjoin(temp, buf);
-		printf("str is ||%s||\n", lst->str);
-		// free(temp);
-		i++;
+		if (temp)
+			free(temp);
 	}
-	printf("finally str is ||%s||\n", lst->str);
-
-	// read(fd, buf, nbyte);
-	// printf("%s\n", buf);
-	// lst->str = buf;
-	// printf("fd is %d when str is %s\n", lst->fd, lst->str);
-	return (0);
+	printf("first str is ||%s||\n", lst->str);
+	line = seperate(lst->str);
+	printf("first line is ||%s||\n", line);
+	printf("final str is ||%s||\n", lst->str);
+	return (line);
 }
 int	main(void)
 {

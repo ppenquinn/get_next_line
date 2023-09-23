@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 08:28:15 by nappalav          #+#    #+#             */
-/*   Updated: 2023/09/22 22:47:03 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/09/24 00:28:33 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*str;
 	size_t	i;
 
-	if (!s1)
-		return ((char *) s2);
-	if (!s2)
-		return ((char *) s1);
 	str = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (!str)
 		return (NULL);
@@ -96,7 +92,8 @@ t_list	*ft_ultimate_lstnew(t_list **lst, int fd)
 	if (!new)
 		return (NULL);
 	new->fd = fd;
-	new->str = NULL;
+	new->str = malloc(1);
+	*new->str = 0;
 	new->next = NULL;
 	*lst = new;
 	return (*lst);
