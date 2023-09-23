@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:30:21 by nappalav          #+#    #+#             */
-/*   Updated: 2023/09/22 23:29:25 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/09/23 21:33:58 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ char	*get_next_line(int fd)
 	char			buf[BUFFER_SIZE + 1];
 	size_t			nbyte;
 	static t_list	*lst;
+	char			*temp;
+	size_t	i = 1;
+
 
 	nbyte = BUFFER_SIZE;
 	buf[BUFFER_SIZE] = 0;
@@ -25,10 +28,24 @@ char	*get_next_line(int fd)
 	if (!lst)
 		ft_ultimate_lstnew(&lst, fd);
 	//finish first
-	read(fd, buf, nbyte);
-	printf("%s\n", buf);
-	lst->str = buf;
-	printf("fd is %d when str is %s\n", lst->fd, lst->str);
+	while (!ft_strchr(lst->str, '\n'))
+	{
+		printf("\nI'm in at round %zu!!\n", i);
+		printf("first str is %s\n", lst->str);
+		read(fd, buf, nbyte);
+		temp = lst->str;
+		printf("temp is ||%s||\nbuf is ||%s|| \n", temp, buf);
+		lst->str = ft_strjoin(temp, buf);
+		printf("str is ||%s||\n", lst->str);
+		// free(temp);
+		i++;
+	}
+	printf("finally str is ||%s||\n", lst->str);
+
+	// read(fd, buf, nbyte);
+	// printf("%s\n", buf);
+	// lst->str = buf;
+	// printf("fd is %d when str is %s\n", lst->fd, lst->str);
 	return (0);
 }
 int	main(void)
@@ -52,9 +69,5 @@ int	main(void)
 	// }
 	// close (fd);
 	get_next_line(fd);
-	get_next_line(fd1);
-	get_next_line(fd);
 	return (0);
 }
-
-
