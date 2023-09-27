@@ -6,17 +6,16 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:30:21 by nappalav          #+#    #+#             */
-/*   Updated: 2023/09/24 01:35:42 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/09/26 17:02:07 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*seperate(char *str)
+char	*seperate(char *str, char *line)
 {
 	size_t	i;
 	char	*temp;
-	char	*line;
 
 	temp = str;
 	i = 0;
@@ -24,16 +23,18 @@ char	*seperate(char *str)
 		i++;
 	str = ft_strdup(str);
 	//handle
-	line = malloc(sizeof(char) * (i + 2));
+	//line = malloc(sizeof(char) * (i + 2));
 	while (i > 0)
 	{
 		line[i] = temp[i];
 		i--;
 	}
 	line[i] = temp[i];
+	printf("line is %s\n", line);
 	free(temp);
-	return (line);
+	return (str);
 }
+
 char	*get_next_line(int fd)
 {
 	char			*buf;
@@ -50,7 +51,6 @@ char	*get_next_line(int fd)
 		lst = lst->next;
 	if (!lst)
 		ft_ultimate_lstnew(&lst, fd);
-	//finish first
 	while (!ft_strchr(lst->str, '\n'))
 	{
 		read(fd, buf, nbyte);
@@ -59,9 +59,8 @@ char	*get_next_line(int fd)
 		if (temp)
 			free(temp);
 	}
-	printf("first str is ||%s||\n", lst->str);
-	line = seperate(lst->str);
-	printf("first line is ||%s||\n", line);
+	line = malloc(sizeof(char) * (ft_strchr(lst->str, '\n') - lst->str + 2));
+	lst->str = seperate(lst->str, line);
 	printf("final str is ||%s||\n", lst->str);
 	return (line);
 }
@@ -71,11 +70,12 @@ int	main(void)
 	char buff[BUFFER_SIZE + 1];
 	size_t nbyte = BUFFER_SIZE;
 	ssize_t rd;
+	char *str;
 
 	buff[BUFFER_SIZE] = 0;
 	fd = open ("test", O_RDONLY);
-	fd1 = open ("test1", O_RDONLY);
-	//printf("fd of test = %d %d\n", fd, fd1);
+	fd1 = open ("test", O_RDONLY);
+	printf("fd of test = %d %d\n", fd, fd1);
 	// rd = read(fd, buff, nbyte);
 	// while (rd > 0)
 	// {
@@ -85,6 +85,9 @@ int	main(void)
 	// 	rd = read(fd, buff, nbyte);
 	// }
 	// close (fd);
-	get_next_line(fd);
+	str = get_next_line(fd);
+	free(str);
+	str = get_next_line(fd);
+	free(str);
 	return (0);
 }
