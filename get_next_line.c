@@ -1,85 +1,111 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        :::      ::::::::   */
-// /*   get_next_line.c                                    :+:      :+:    :+:   */
-// /*                                                    +:+ +:+         +:+     */
-// /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
-// /*                                                +#+#+#+#+#+   +#+           */
-// /*   Created: 2023/09/21 19:30:21 by nappalav          #+#    #+#             */
-// /*   Updated: 2023/09/28 21:15:18 by nappalav         ###   ########.fr       */
-// /*                                                                            */
-// /* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line2.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/28 21:16:47 by nappalav          #+#    #+#             */
+/*   Updated: 2023/09/30 13:35:37 by nappalav         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// #include "get_next_line.h"
+#include "get_next_line.h"
 
-// char	*seperate(char *str, char *line)
-// {
-// 	size_t	i;
-// 	char	*temp;
+char	*ft_readfile(int fd, char *str)
+{
+	char	*temp;
+	char	*buf;
+	size_t	nbyte;
+	ssize_t	rd;
 
-// 	temp = str;
-// 	i = 0;
-// 	while (*(str++) != '\n')
-// 		i++;
-// 	str = ft_strdup(str);
-// 	//handle
-// 	//line = malloc(sizeof(char) * (i + 2));
-// 	while (i > 0)
-// 	{
-// 		line[i] = temp[i];
-// 		i--;
-// 	}
-// 	line[i] = temp[i];
-// 	printf("line is %s\n", line);
-// 	free(temp);
-// 	return (str);
-// }
+	nbyte = BUFFER_SIZE;
+	buf = malloc(sizeof(char) * (nbyte + 1));
+	if (!buf)
+		return (NULL);
+	buf[nbyte] = 0;
+	while (!ft_strchr(str, '\n'))
+	{
+		rd = read(fd, buf, nbyte);
+		if (!rd)
+			return (NULL);
+		temp = str;
+		str = ft_strjoin(temp, buf);
+		if (temp)
+			free(temp);
+	}
+	return (str);
+}
 
-// char	*get_next_line(int fd)
-// {
-// 	char			*buf;
-// 	size_t			nbyte;
-// 	static t_list	*lst;
-// 	char			*temp;
-// 	char			*line;
+char	*ft_getline(char *str, size_t target)
+{
+	size_t	i;
+	char	*line;
 
-// 	nbyte = BUFFER_SIZE;
-// 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-// 	if (!buf)
-// 		return (NULL);
-// 	while (lst != NULL && lst->fd != fd)
-// 		lst = lst->next;
-// 	if (!lst)
-// 		ft_ultimate_lstnew(&lst, fd);
-// 	while (!ft_strchr(lst->str, '\n'))
-// 	{
-// 		read(fd, buf, nbyte);
-// 		temp = lst->str;
-// 		lst->str = ft_strjoin(temp, buf);
-// 		if (temp)
-// 			free(temp);
-// 	}
-// 	line = malloc(sizeof(char) * (ft_strchr(lst->str, '\n') - lst->str + 2));
-// 	lst->str = seperate(lst->str, line);
-// 	printf("final str is ||%s||\n", lst->str);
-// 	return (line);
-// }
+	line = malloc(sizeof(char) * (target + 1));
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (i < target)
+	{
+		//printf("line[%zu] is %c\n", i, str[i]);
+		line[i] = str[i];
+		i++;
+	}
+	return (line);
+}
+
+char	*ft_update(char *str, size_t target)
+{
+	char	*temp;
+
+	temp = str;
+	str += target;
+	str = ft_strdup(str);
+	free(temp);
+	return (str);
+}
+
+char	*get_next_line(int fd)
+{
+	static t_list	*lst;
+	char			*line;
+	size_t			target;
+
+	while (lst != NULL && lst->fd != fd)
+		lst = lst->next;
+	if (!lst)
+		ft_ultimate_lstnew(&lst, fd);
+	if (!ft_strchr(lst->str, '\n'))
+	{
+		lst->str = ft_readfile(fd, lst->str);
+		if (!lst->str)
+			return (NULL);
+	}
+	target = 0;
+	while (lst->str[target - 1] != '\n')
+		target++;
+	line = ft_getline(lst->str, target);
+	lst->str = ft_update(lst->str, target);
+	return (line);
+}
+
 // int	main(void)
 // {
 // 	int	fd, fd1;
-// 	char buff[BUFFER_SIZE + 1];
-// 	size_t nbyte = BUFFER_SIZE;
-// 	ssize_t rd;
-// 	char *str;
+// 	char	*str;
 
-// 	buff[BUFFER_SIZE] = 0;
 // 	fd = open ("test", O_RDONLY);
-// 	fd1 = open ("test", O_RDONLY);
-// 	printf("fd of test = %d %d\n", fd, fd1);
+// 	fd1 = open ("test1", O_RDONLY);
+
 
 // 	str = get_next_line(fd);
-// 	free(str);
-// 	str = get_next_line(fd);
-// 	free(str);
+// 	printf("line = %s <<END>>\n", str);
+// 	while (str != NULL)
+// 	{
+// 		free(str);
+// 		str = get_next_line(fd);
+// 		printf("line = %s <<END>>\n", str);
+// 	}
 // 	return (0);
 // }
