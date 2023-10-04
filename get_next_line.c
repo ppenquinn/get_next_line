@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line2.c                                   :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 21:16:47 by nappalav          #+#    #+#             */
-/*   Updated: 2023/09/30 13:35:37 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/04 22:27:24 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,27 @@ char	*ft_readfile(int fd, char *str)
 	nbyte = BUFFER_SIZE;
 	buf = malloc(sizeof(char) * (nbyte + 1));
 	if (!buf)
+	{
+		free(str);
 		return (NULL);
-	buf[nbyte] = 0;
+	}
 	while (!ft_strchr(str, '\n'))
 	{
 		rd = read(fd, buf, nbyte);
-		if (!rd)
+		if (rd <= 0)
+		{
+			free(buf);
+			free(str);
 			return (NULL);
-		temp = str;
-		str = ft_strjoin(temp, buf);
-		if (temp)
+		}
+		buf[rd] = 0;
+		str = ft_strjoin(str, buf);
+		if (!str)
+		{
 			free(temp);
+			free(buf);
+			return (NULL);
+		}
 	}
 	return (str);
 }
@@ -44,11 +54,13 @@ char	*ft_getline(char *str, size_t target)
 
 	line = malloc(sizeof(char) * (target + 1));
 	if (!line)
+	{
+		free(str);
 		return (NULL);
+	}
 	i = 0;
 	while (i < target)
 	{
-		//printf("line[%zu] is %c\n", i, str[i]);
 		line[i] = str[i];
 		i++;
 	}
@@ -62,50 +74,58 @@ char	*ft_update(char *str, size_t target)
 	temp = str;
 	str += target;
 	str = ft_strdup(str);
+	if (!str)
+	{
+		free(temp);
+		return (NULL);
+	}
 	free(temp);
 	return (str);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_list	*lst;
-	char			*line;
-	size_t			target;
+	static char	*str;
+	char		*line;
+	size_t		target;
 
-	while (lst != NULL && lst->fd != fd)
-		lst = lst->next;
-	if (!lst)
-		ft_ultimate_lstnew(&lst, fd);
-	if (!ft_strchr(lst->str, '\n'))
+	if (fd <= 0)
+		return (NULL);
+	str = malloc(1);
+	if (!str)
+		return (NULL);
+	*str = 0;
+	if (!ft_strchr(str, '\n'))
 	{
-		lst->str = ft_readfile(fd, lst->str);
-		if (!lst->str)
+		str = ft_readfile(fd, str);
+		if (!str)
 			return (NULL);
 	}
 	target = 0;
-	while (lst->str[target - 1] != '\n')
+	while (str[target])
+	{
+		if (str[target] == '\n')
+			break;
 		target++;
-	line = ft_getline(lst->str, target);
-	lst->str = ft_update(lst->str, target);
+	}
+	line = ft_getline(str, target);
+	str = ft_update(str, target);
 	return (line);
 }
 
-// int	main(void)
-// {
-// 	int	fd, fd1;
-// 	char	*str;
+int	main(void)
+{
+	int		fd;
+	char	*str;
 
-// 	fd = open ("test", O_RDONLY);
-// 	fd1 = open ("test1", O_RDONLY);
-
-
-// 	str = get_next_line(fd);
-// 	printf("line = %s <<END>>\n", str);
-// 	while (str != NULL)
-// 	{
-// 		free(str);
-// 		str = get_next_line(fd);
-// 		printf("line = %s <<END>>\n", str);
-// 	}
-// 	return (0);
-// }
+	fd = open ("test1", O_RDONLY);
+	str = get_next_line(fd);
+	printf("line = %s <<END>>\n", str);
+	while (str != NULL)
+	{
+		free(str);
+		str = get_next_line(fd);
+		printf("line = %s <<END>>\n", str);
+	}
+	return (0);
+}

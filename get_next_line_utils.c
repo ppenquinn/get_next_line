@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 08:28:15 by nappalav          #+#    #+#             */
-/*   Updated: 2023/09/24 00:28:33 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/04 22:27:55 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ size_t	ft_strlen(const char *s)
 	return (idx);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str;
 	size_t	i;
@@ -61,6 +61,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		i++;
 	}
 	str[i + ft_strlen(s1)] = '\0';
+	free(s1);
+	free(s2);
 	return (str);
 }
 
@@ -84,17 +86,19 @@ char	*ft_strdup(const char *s1)
 	return (dest);
 }
 
-t_list	*ft_ultimate_lstnew(t_list **lst, int fd)
-{
-	t_list	*new;
+// t_list	*ft_ultimate_lstnew(t_list **lst, int fd)
+// {
+// 	t_list	*new;
 
-	new = malloc(sizeof(t_list));
-	if (!new)
-		return (NULL);
-	new->fd = fd;
-	new->str = malloc(1);
-	*new->str = 0;
-	new->next = NULL;
-	*lst = new;
-	return (*lst);
-}
+// 	new = malloc(sizeof(t_list));
+// 	if (!new)
+// 		return (NULL);
+// 	new->fd = fd;
+// 	new->str = malloc(1);
+// 	if (!new->str)
+// 		return (NULL);
+// 	*new->str = 0;
+// 	new->next = NULL;
+// 	*lst = new;
+// 	return (*lst);
+// }
