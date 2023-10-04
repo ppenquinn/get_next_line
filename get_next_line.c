@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 21:16:47 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/04 22:27:24 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/04 23:09:10 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,9 @@ char	*ft_readfile(int fd, char *str)
 {
 	char	*temp;
 	char	*buf;
-	size_t	nbyte;
 	ssize_t	rd;
 
-	nbyte = BUFFER_SIZE;
-	buf = malloc(sizeof(char) * (nbyte + 1));
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 	{
 		free(str);
@@ -28,7 +26,7 @@ char	*ft_readfile(int fd, char *str)
 	}
 	while (!ft_strchr(str, '\n'))
 	{
-		rd = read(fd, buf, nbyte);
+		rd = read(fd, buf, BUFFER_SIZE);
 		if (rd <= 0)
 		{
 			free(buf);
@@ -44,6 +42,7 @@ char	*ft_readfile(int fd, char *str)
 			return (NULL);
 		}
 	}
+	free(buf);
 	return (str);
 }
 
@@ -91,10 +90,13 @@ char	*get_next_line(int fd)
 
 	if (fd <= 0)
 		return (NULL);
-	str = malloc(1);
 	if (!str)
-		return (NULL);
-	*str = 0;
+	{
+		str = malloc(1);
+		if (!str)
+			return (NULL);
+		*str = 0;
+	}
 	if (!ft_strchr(str, '\n'))
 	{
 		str = ft_readfile(fd, str);

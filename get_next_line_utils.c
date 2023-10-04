@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 08:28:15 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/04 22:27:55 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/04 22:59:22 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	str[i + ft_strlen(s1)] = '\0';
 	free(s1);
-	free(s2);
 	return (str);
 }
 
