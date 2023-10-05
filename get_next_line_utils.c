@@ -6,15 +6,15 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 08:28:15 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/04 22:59:22 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/05 14:41:36 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *s, int c)
+char *ft_strchr(const char *s, int c)
 {
-	char	chr;
+	char chr;
 
 	if (!s)
 		return (NULL);
@@ -30,9 +30,9 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-size_t	ft_strlen(const char *s)
+size_t ft_strlen(const char *s)
 {
-	size_t	idx;
+	size_t idx;
 
 	idx = 0;
 	while (s[idx])
@@ -40,10 +40,10 @@ size_t	ft_strlen(const char *s)
 	return (idx);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char *ft_strjoin(char *s1, char *s2)
 {
-	char	*str;
-	size_t	i;
+	char *str;
+	size_t i;
 
 	str = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (!str)
@@ -65,10 +65,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (str);
 }
 
-char	*ft_strdup(const char *s1)
+char *ft_strdup(const char *s1)
 {
-	char	*dest;
-	size_t	i;
+	char *dest;
+	size_t i;
 
 	if (!s1)
 		return (NULL);
