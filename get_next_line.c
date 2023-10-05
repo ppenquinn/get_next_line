@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 21:16:47 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/04 23:09:10 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/05 08:50:51 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 char	*ft_readfile(int fd, char *str)
 {
-	char	*temp;
 	char	*buf;
 	ssize_t	rd;
 
@@ -37,7 +36,6 @@ char	*ft_readfile(int fd, char *str)
 		str = ft_strjoin(str, buf);
 		if (!str)
 		{
-			free(temp);
 			free(buf);
 			return (NULL);
 		}
@@ -88,7 +86,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	size_t		target;
 
-	if (fd <= 0)
+	if (fd <= 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	if (!str)
 	{
@@ -104,30 +102,30 @@ char	*get_next_line(int fd)
 			return (NULL);
 	}
 	target = 0;
-	while (str[target])
-	{
-		if (str[target] == '\n')
-			break;
+	while (str[target] && str[target] != '\n')
 		target++;
-	}
-	line = ft_getline(str, target);
-	str = ft_update(str, target);
+	line = ft_getline(str, target + 1);
+	if(!line)
+		return (NULL);
+	str = ft_update(str, target + 1);
+	if (!str)
+		return (NULL);
 	return (line);
 }
 
-int	main(void)
-{
-	int		fd;
-	char	*str;
+// int	main(void)
+// {
+// 	int		fd;
+// 	char	*str;
 
-	fd = open ("test1", O_RDONLY);
-	str = get_next_line(fd);
-	printf("line = %s <<END>>\n", str);
-	while (str != NULL)
-	{
-		free(str);
-		str = get_next_line(fd);
-		printf("line = %s <<END>>\n", str);
-	}
-	return (0);
-}
+// 	fd = open ("test", O_RDONLY);
+// 	str = get_next_line(fd);
+// 	printf("line = %s <<END>>\n", str);
+// 	while (str != NULL)
+// 	{
+// 		free(str);
+// 		str = get_next_line(fd);
+// 		printf("line = %s <<END>>\n", str);
+// 	}
+// 	return (0);
+// }
