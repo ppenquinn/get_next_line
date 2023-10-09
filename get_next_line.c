@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 21:16:47 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/05 14:50:19 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/09 12:33:22 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,10 @@ char *ft_readfile(int fd, char *str)
 		str = ft_strjoin(str, buf);
 		if (!str)
 		{
-			// free str
 			free(buf);
 			return (NULL);
 		}
 	}
-	// printf("str = %s:\n", str);
 	free(buf);
 	if (*str == '\0')
 	{
