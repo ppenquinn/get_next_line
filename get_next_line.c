@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 21:16:47 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/09 12:33:22 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/09 13:26:56 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,15 +93,6 @@ char *get_next_line(int fd)
 	char *line;
 	size_t target;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-	{
-		if (str)
-		{
-			free (str);
-			str = NULL;
-		}
-		return (NULL);
-	}
 	if (!str)
 	{
 		str = malloc(1);
@@ -120,10 +111,16 @@ char *get_next_line(int fd)
 		target++;
 	line = ft_getline(str, target + 1);
 	if (!line)
+	{
+		str = NULL;
 		return (NULL);
+	}
 	str = ft_update(str, target + 1);
 	if (!str)
+	{
+		free (line);
 		return (NULL);
+	}
 	return (line);
 }
 

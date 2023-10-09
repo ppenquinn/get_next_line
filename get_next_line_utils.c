@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 08:28:15 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/09 12:36:42 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/10/09 13:17:14 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ char *ft_strdup(const char *s1)
 	return (dest);
 }
 
-char	*setzero(char *str)
-{
-	
-}
+// char	*setzero(char *str)
+// {
+
+// }
 // t_list	*ft_ultimate_lstnew(t_list **lst, int fd)
 // {
 // 	t_list	*new;
