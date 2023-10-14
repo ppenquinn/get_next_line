@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   GNL.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/28 21:16:47 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/14 16:47:34 by nappalav         ###   ########.fr       */
+/*   Created: 2023/10/13 10:29:05 by nappalav          #+#    #+#             */
+/*   Updated: 2023/10/14 16:40:19 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,20 @@ char	*ft_readfile(int fd, char *str)
 	return (str);
 }
 
+char	*ft_update(char *str, size_t target)
+{
+	char	*temp;
+
+	temp = str;
+	str += target;
+	str = ft_strdup(str);
+	if (!str)
+	{
+		return (NULL);
+	}
+	return (str);
+}
+
 char	*ft_getline(char *str, size_t target)
 {
 	size_t	i;
@@ -68,23 +82,13 @@ char	*ft_getline(char *str, size_t target)
 		line[i] = str[i];
 		i++;
 	}
-	return (line);
-}
-
-char	*ft_update(char *str, size_t target)
-{
-	char	*temp;
-
-	temp = str;
-	str += target;
-	str = ft_strdup(str);
+	str = ft_update(str, target + 1);
 	if (!str)
 	{
-		free(temp);
+		free(line);
 		return (NULL);
 	}
-	free(temp);
-	return (str);
+	return (line);
 }
 
 char	*get_next_line(int fd)
@@ -108,35 +112,29 @@ char	*get_next_line(int fd)
 		str = NULL;
 		return (NULL);
 	}
-	str = ft_update(str, target + 1);
-	if (!str)
-	{
-		free (line);
-		return (NULL);
-	}
+	printf("str is %s\n", str);
+	// str = ft_update(str, target + 1);
+	// if (!str)
+	// {
+	// 	free (line);
+	// 	return (NULL);
+	// }
 	return (line);
 }
 
-// int main(void)
-// {
-// 	int fd;
-// 	char *str;
+int main(void)
+{
+	int fd;
+	char *str;
 
-// 	fd = open("alternate_line_nl_with_nl", O_RDONLY);
-// 	str = get_next_line(fd);
-// 	printf("line %s<\n", str);
-// 	free(str);
-// 	str = get_next_line(fd);
-// 	printf("line %s<", str);
-// 	free(str);
-// 	str = get_next_line(fd);
-// 	printf("line %s<", str);
-
-// 	// while (str != NULL)
-// 	// {
-// 	// 	free(str);
-// 	// 	str = get_next_line(fd);
-// 	// 	printf("line %s<", str);
-// 	// }
-// 	return (0);
-// }
+	fd = open("alternate_line_nl_with_nl", O_RDONLY);
+	str = get_next_line(fd);
+	printf("line %s<\n", str);
+	while (str != NULL)
+	{
+		free(str);
+		str = get_next_line(fd);
+		printf("line %s<\n", str);
+	}
+	return (0);
+}
