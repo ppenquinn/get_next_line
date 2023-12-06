@@ -6,7 +6,7 @@
 /*   By: nappalav <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 21:16:47 by nappalav          #+#    #+#             */
-/*   Updated: 2023/10/14 16:47:34 by nappalav         ###   ########.fr       */
+/*   Updated: 2023/12/06 17:06:36 by nappalav         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,27 +116,3 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-
-// int main(void)
-// {
-// 	int fd;
-// 	char *str;
-
-// 	fd = open("alternate_line_nl_with_nl", O_RDONLY);
-// 	str = get_next_line(fd);
-// 	printf("line %s<\n", str);
-// 	free(str);
-// 	str = get_next_line(fd);
-// 	printf("line %s<", str);
-// 	free(str);
-// 	str = get_next_line(fd);
-// 	printf("line %s<", str);
-
-// 	// while (str != NULL)
-// 	// {
-// 	// 	free(str);
-// 	// 	str = get_next_line(fd);
-// 	// 	printf("line %s<", str);
-// 	// }
-// 	return (0);
-// }
